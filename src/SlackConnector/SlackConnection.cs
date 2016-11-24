@@ -144,7 +144,12 @@ namespace SlackConnector
             }
 
             var client = _connectionFactory.CreateChatClient();
-            await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+
+            //This uses manual fillout. Lets simplify things shall we? 
+            //await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+
+            //By passing the message directly we can more easily control fields.
+            await client.PostMessage(SlackKey, message);
         }
 
         public async Task<IEnumerable<SlackChatHub>> GetChannels()

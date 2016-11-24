@@ -17,7 +17,7 @@ namespace SlackConnector.Tests.Integration
 
             var slackConnector = new SlackConnector();
             var connection = slackConnector.Connect(config.Slack.ApiToken).Result;
-            SlackChatHub channel = connection.ConnectedChannels().First(x => x.Name.Equals("#general", StringComparison.InvariantCultureIgnoreCase));
+            SlackChatHub channel = connection.ConnectedChannels().First(x => x.Name.Equals("#-lobby-", StringComparison.InvariantCultureIgnoreCase));
 
             // when
             connection.IndicateTyping(channel).Wait();

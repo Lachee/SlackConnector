@@ -64,9 +64,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Configuration\config.default.json" />
-    <None Include="Configuration\config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Configuration\config.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

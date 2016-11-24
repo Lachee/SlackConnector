@@ -33,5 +33,53 @@ namespace SlackConnector.Connections.Clients.Chat
 
             await _requestExecutor.Execute<StandardResponse>(request);
         }
+
+
+        public async Task PostMessage(string slackKey, BotMessage message)
+        {
+            var request = new RestRequest(SEND_MESSAGE_PATH);
+            bool as_user = true;
+
+            //Add the required API parameters
+            request.AddParameter("token", slackKey);
+
+            //Slack messages goodness
+            request.AddParameter("channel", message.ChatHub.Id);
+            request.AddParameter("text", message.Text);
+
+            //MOAR GOODNESS
+            //Name of the sender
+            if (!string.IsNullOrEmpty(message.Name))
+            {
+                //We want a custom name. As a result, we are not allowed to have user permissions
+                as_user = false;
+                request.AddParameter("username", message.Name);
+            }
+
+            //The Icon of the sender
+            if (!string.IsNullOrEmpty(message.Icon))
+            {
+                //We want a custom icon. As the same as a name, we are not allowed to have permissions if we get one
+                as_user = false;
+                request.AddParameter(message.UsingEmoji() ? "icon_emoji" : "icon_url", message.Icon);
+            }
+
+            //Use markdown?
+            request.AddParameter("parse", message.UseMarkdown ? "full" : "none");
+
+            //Add attachments
+            if (message.Attachments != null && message.Attachments.Any())
+            {
+                request.AddParameter("attachments", JsonConvert.SerializeObject(message.Attachments));
+            }
+
+            //Should we be considered a user?
+            request.AddParameter("as_user", as_user);
+
+            //Send the request
+            await _requestExecutor.Execute<StandardResponse>(request);
+        }
+
+
     }
 }

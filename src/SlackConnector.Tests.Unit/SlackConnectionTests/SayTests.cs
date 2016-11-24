@@ -49,7 +49,7 @@ namespace SlackConnector.Tests.Unit.SlackConnectionTests
             public void then_should_call_messenger()
             {
                 GetMockFor<IChatClient>()
-                    .Verify(x => x.PostMessage(SlackKey, Message.ChatHub.Id, Message.Text, Message.Attachments), Times.Once);
+                    .Verify(x => x.PostMessage(SlackKey, Message), Times.Once);
             }
         }
 
