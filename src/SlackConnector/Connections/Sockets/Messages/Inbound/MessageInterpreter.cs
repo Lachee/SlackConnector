@@ -9,6 +9,9 @@ namespace SlackConnector.Connections.Sockets.Messages.Inbound
     {
         public InboundMessage InterpretMessage(string json)
         {
+            if (string.IsNullOrEmpty(json))
+                return null;
+
             try
             {
                 MessageType messageType = ParseMessageType(json);

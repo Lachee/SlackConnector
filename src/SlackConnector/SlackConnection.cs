@@ -152,6 +152,22 @@ namespace SlackConnector
             await client.PostMessage(SlackKey, message);
         }
 
+        public async Task Unsay(SlackMessage message)
+        {
+            if (string.IsNullOrEmpty(message.ChatHub?.Id))
+            {
+                throw new MissingChannelException("When calling the Unsay() method, the message parameter must have its ChatHub property set.");
+            }
+
+            var client = _connectionFactory.CreateChatClient();
+
+            //This uses manual fillout. Lets simplify things shall we? 
+            //await client.PostMessage(SlackKey, message.ChatHub.Id, message.Text, message.Attachments);
+
+            //By passing the message directly we can more easily control fields.
+            await client.DeleteMessage(SlackKey, message);
+        }
+
         public async Task<IEnumerable<SlackChatHub>> GetChannels()
         {
             IChannelClient client = _connectionFactory.CreateChannelClient();

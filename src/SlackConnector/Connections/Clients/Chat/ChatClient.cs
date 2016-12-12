@@ -12,12 +12,13 @@ namespace SlackConnector.Connections.Clients.Chat
     {
         private readonly IRequestExecutor _requestExecutor;
         internal const string SEND_MESSAGE_PATH = "/api/chat.postMessage";
+        internal const string DELETE_MESSAGE_PATH = "/api/chat.delete";
 
         public ChatClient(IRequestExecutor requestExecutor)
         {
             _requestExecutor = requestExecutor;
         }
-
+        
         public async Task PostMessage(string slackKey, string channel, string text, IList<SlackAttachment> attachments)
         {
             var request = new RestRequest(SEND_MESSAGE_PATH);
@@ -33,8 +34,6 @@ namespace SlackConnector.Connections.Clients.Chat
 
             await _requestExecutor.Execute<StandardResponse>(request);
         }
-
-
         public async Task PostMessage(string slackKey, BotMessage message)
         {
             var request = new RestRequest(SEND_MESSAGE_PATH);
@@ -80,6 +79,19 @@ namespace SlackConnector.Connections.Clients.Chat
             await _requestExecutor.Execute<StandardResponse>(request);
         }
 
+        public async Task DeleteMessage(string slackKey, string channel, double timestamp)
+        {
+            var request = new RestRequest(DELETE_MESSAGE_PATH);
+            request.AddParameter("token", slackKey);
+            request.AddParameter("ts", timestamp.ToString());
+            request.AddParameter("channel", channel);
+            request.AddParameter("as_user", "true");
 
+            await _requestExecutor.Execute<StandardResponse>(request);
+        }
+        public async Task DeleteMessage(string slackKey, SlackMessage message)
+        {
+            await DeleteMessage(slackKey, message.ChatHub.Id, message.TimeStamp);
+        }
     }
 }
